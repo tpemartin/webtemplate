@@ -1,0 +1,48 @@
+{
+  "R": {
+    "Version": "4.0.2",
+    "Repositories": [
+      {
+        "Name": "CRAN",
+        "URL": "https://cloud.r-project.org"
+      }
+    ]
+  },
+  "Packages": {
+    "glue": {
+      "Package": "glue",
+      "Version": "1.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6efd734b14c6471cfe443345f3e35e29"
+    },
+    "magrittr": {
+      "Package": "magrittr",
+      "Version": "1.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1bb58822a20301cee84a41678e25d9b7"
+    },
+    "renv": {
+      "Package": "renv",
+      "Version": "0.11.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1c3ef87cbb81c23ac96797781ec7aecc"
+    },
+    "stringi": {
+      "Package": "stringi",
+      "Version": "1.4.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e99d8d656980d2dd416a962ae55aec90"
+    },
+    "stringr": {
+      "Package": "stringr",
+      "Version": "1.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0759e6b6c0957edb1311028a49a35e76"
+    }
+  }
+}
