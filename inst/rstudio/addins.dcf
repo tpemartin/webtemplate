@@ -1,0 +1,5 @@
+Name: Localhost the last html
+Description: New Addin Description
+Binding: serveTheLastModified
+Interactive: false
+

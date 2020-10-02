@@ -1,0 +1,3 @@
+dep: htmlDependency(alllayout) --> heade
+afterbodyJs: all together --> generate_afterBodyScript() -> afterBodyJs tag
+all afterbodyHtml, tagList together, put to the very end of weblayout.

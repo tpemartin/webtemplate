@@ -1,0 +1,155 @@
+---
+title: "Flexible framework constructor"
+author: "Don't knit. Just Run."
+date: "2020"
+drake_cache: ".template"
+---
+
+## Setup 
+
+用來進行localhost用：
+
+```{r setup, eval=F, include=FALSE}
+knitr::opts_chunk$set(echo = T, eval=F)
+library(webtemplate)
+ws <- webService() # build ws as a promise
+ws$serveTheLastModified(useLocalhost=T)
+```
+
+## Drake makecondition
+
+放你程式碼所需套件, 及任何前置步驟。
+
+此處的程式必需self-contained, 也就是在任何獨立的R session，它都有辦法被執行。
+
+```{r makecondition}
+library(htmltools);
+library(dplyr); library(webtemplate)
+```
+
+## --------------------
+
+## * Head/Afterbody 選擇網頁架構
+htmlDependencies are defined here. The element inside list should be from htmlDependency() if you add a new one. 
+
+Choosing from template menu:
+```{r frameworkChoice}
+frameworkChoice = {
+  menu <- get_menu()
+  myChoice <- list(
+    menu$materialize(),
+    menu$jQuery(),
+    menu$googleLogin()
+  )
+  myChoice
+}
+```
+
+## Body
+
+```{r body}
+body = {
+  tagList(
+    tags$header(
+    "Title"),
+    tags$div(class="division"),
+    tags$main(
+      "Main content"
+    ),
+    tags$footer(
+      "footer"
+    )
+  )
+}
+```
+
+## * Head Extra
+
+### Stylesheet
+
+Your own style sheet:
+
+  * Use `get_depTemplate()` to generate a template to fill in.
+  
+  * Use `htmltools::htmlDependency()` to generate template's dep element value.
+  
+```{r myStyle}
+myStyle={
+  template <- get_depTemplate()
+  template$dep <- 
+    htmltools::htmlDependency(
+      name="myStyle", 
+      version="0.1",
+      src="css/myStyle.css"
+    )
+}
+```
+
+
+## * After Body
+
+主要為javascript放置處之一，其注入方式分：
+
+  * afterbodyJs: source為js script或.js file
+  
+  * afterbodyHtml: source已有`<script>` tag的html element或.html file. 
+
+```{r myJs}
+myJs = {
+  template <- get_depTemplate()
+  template$afterbodyJs <- 
+    htmltools::includeScript(
+      "js/myJs.js"
+    )
+  template
+}
+```
+
+```{r myAfterbodyHtml}
+myAfterbodyHtml = {
+  template <- get_depTemplate()
+  template$afterbodyHtml <-
+    htmltools::includeHTML(
+      "html/myJsWithScriptTag.html"
+    )
+  template
+}
+```
+
+
+## --------------------
+
+## 產生網頁
+
+### Put * together
+
+```{r allDependencies}
+allDependencies = {
+  frameworkChoice %>%
+    append(myStyle) %>%
+    append(myJs) %>%
+    append(myAfterbodyHtml)
+}
+```
+
+
+```{r outputWeblayout}
+outputWeblayout = {
+  bodyLayout <- generate_template(
+    allDependencies,
+    .body=body
+  )
+  save_html(bodyLayout, file="template.html")
+}
+```
+
+## After make hijack
+
+`afterMake=T`
+
+```{r hijackHtml, afterMake=T}
+hijackHtml = {
+  # if you need to modify template.html after it was made, put code here.
+}
+```
+

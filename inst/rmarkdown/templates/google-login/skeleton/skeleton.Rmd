@@ -1,0 +1,69 @@
+---
+title: "Example of Google LogIn"
+drake_cache: ".module"
+---
+
+Source: <https://developers.google.com/identity/sign-in/web/build-button>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval=F)
+library(rmd2drake)
+library(drake)
+ws <- webService()
+ws$serveTheLastModified()
+```
+
+## makecondition
+
+```{r makecondition}
+library(webtemplate)
+library(htmltools)
+rmd2drake:::extract_activeEditorFilename()
+setwd(dirname(.activeFile))
+```
+
+## Google Login
+
+```{r googleLoginComponent}
+googleLoginComponent = {
+  # initiate Google Login Component
+  googleLoginComponent <- googleLoginModule()
+  
+  # Preprocessing component to update
+  # component based on user situation
+  googleLoginComponent = googleLoginComponent$preprocessing(
+    clientId = "808460346772-29ro......googleusercontent.com"
+  )
+  googleLoginComponent
+}
+```
+
+## Assemble webpage components
+
+```{r bodyTagList}
+bodyTagList = {
+  tagList(
+    googleLoginComponent$withinbody,
+    googleLoginComponent$afterbody
+  )
+}
+```
+
+```{r htmlContent}
+htmlContent = {
+  attachDependencies(
+    bodyTagList,
+    googleLoginComponent$dependency
+  )
+}
+```
+
+```{r saveHtml, drake=T}
+saveHtml = {
+  save_html(
+    htmlContent,
+    file = file_out("googleLogin.html")
+  )
+}
+```
+
