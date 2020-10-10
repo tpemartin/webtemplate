@@ -1,3 +1,46 @@
+#' serve the last modified html (usually the latest knitted Rmd) of the current Active File folder
+#'
+#' @param useLocalhost A logical, default=T
+#'
+#' @return
+#' @export
+#'
+#' @examples none
+serveTheLatestHtml_ActiveFileFolder <- function(useLocalhost=T){
+  rmd2drake:::extract_activeEditorFilename()
+  .activeFile <- "~/Github/learning-dashboard/subplans/login.Rmd"
+  path = dirname(.activeFile)
+  if(length(servr::daemon_list())!=0){
+    servr::daemon_stop()
+  }
+  rootPath <- normalizePath(path)
+  sconfig <- servr::server_config()
+  host <- sconfig$host
+  port <- sconfig$port
+  allHtmls <- list.files(path = path, pattern = ".html$",
+                         full.names = T)
+  allHtmlsInfo <- file.info(allHtmls)
+  loc_theLatest <- with(allHtmlsInfo, which(mtime == max(mtime)))
+  html2open <- stringr::str_remove(
+    allHtmls[[loc_theLatest]],
+    glue::glue("^(\\.|{rootPath})"))
+
+  url0 <-
+    ifelse(
+      useLocalhost,
+      paste0("http://localhost:", port, html2open),
+      paste0("http://", host, ":", port, html2open)
+    )
+
+  if (length(servr::daemon_list()) == 0) {
+    servr::httd(
+      dir=rootPath,
+      port=port
+    )
+  }
+
+  browseURL(url0)
+}
 #' Have web serve R chunk in your clipboard for you to paste
 #'
 #' @return
@@ -192,7 +235,7 @@ addJs2LatestHtmlServe <- function(){
 #' @examples none
 webService <- function(){
   service <- list() #new.env(parent=globalenv())
-  service$serveTheLastModified <- serveTheLastModified
+  service$serveTheLatestHtml_ActiveFileFolder <- serveTheLatestHtml_ActiveFileFolder
   service$create_jqueryPage <- create_jqueryPage
   service$browse_last <- servr::browse_last
   service$addJsHtml2Latest <- addJsHtml2Latest
